@@ -1,5 +1,7 @@
 # BlockHorizon
 
+---
+
 ## 项目概述
 这是一个使用 OpenGL 相关库进行开发的项目，项目主要依赖于 LWJGL 和 JOML 库。内容为学习OpenGL构建体素世界
 
@@ -33,3 +35,13 @@
 1. 克隆项目到本地：
    ```sh
    git clone https://github.com/iskcjn/OpenGL_Study.git
+
+---
+
+## 许可证
+本项目使用 [MIT 许可证](LICENSE.md) 进行许可，详情请参阅 `LICENSE` 文件。
+
+---
+
+## License
+This project is licensed under the [MIT License](LICENSE.md) For details, please refer to the `LICENSE` file.
