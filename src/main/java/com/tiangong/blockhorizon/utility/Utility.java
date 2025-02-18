@@ -1,6 +1,13 @@
 package com.tiangong.blockhorizon.utility;
 
+import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBImage;
+
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class Utility {
     /**
@@ -24,6 +31,46 @@ public class Utility {
             }
         }
         return shaderSource.toString();
+    }
+
+    /**
+     * 加载纹理
+     *
+     * @param filePath 纹理文件的路径
+     * @return 纹理ID
+     * @throws IOException 如果读取文件时发生错误
+     */
+    public static int loadTexture(String filePath) throws IOException {
+        int textureID = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, textureID);
+
+        // 设置纹理参数
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); // GL_NEAREST GL_LINEAR
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        // 加载图像
+        STBImage.stbi_set_flip_vertically_on_load(true);
+        IntBuffer width = BufferUtils.createIntBuffer(1);
+        IntBuffer height = BufferUtils.createIntBuffer(1);
+        IntBuffer channels = BufferUtils.createIntBuffer(1);
+
+        ByteBuffer image = STBImage.stbi_load(filePath, width, height, channels, 4);
+        if (image == null) {
+            throw new RuntimeException("无法加载纹理: " + STBImage.stbi_failure_reason());
+        }
+
+        // 上传纹理数据
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(), height.get(),
+                0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+        // 禁用多重映射
+        // glGenerateMipmap(GL_TEXTURE_2D);
+
+        // 释放内存
+        STBImage.stbi_image_free(image);
+
+        return textureID;
     }
 
     /**

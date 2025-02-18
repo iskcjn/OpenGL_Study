@@ -9,24 +9,29 @@ import java.util.Collections;
 import java.util.List;
 
 public class Block {
+    // TODO 顶部 和 底部 UV Y 轴坐标不正确（相同）绘制异常需要修复
+
     public static final float[] vertices = new float[]{
-            // 前面 VO
-            -0.5f, -0.5f, 0.5f,
+            // 前面 + UV
+            // VO
+            -0.5f, -0.5f, 0.5f, 0.0f, 0.9375f,
             // V1
-            -0.5f, 0.5f, 0.5f,
+            -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
             // V2
-            0.5f, 0.5f, 0.5f,
+            0.5f, 0.5f, 0.5f, 0.0625f, 1.0f,
             // V3
-            0.5f, -0.5f, 0.5f,
-            // 后面 V4
-            0.5f, -0.5f, -0.5f,
+            0.5f, -0.5f, 0.5f, 0.0625f, 0.9375f,
+            // 后面 + UV
+            // V4
+            0.5f, -0.5f, -0.5f, 0.0f, 0.9375f,
             // V5
-            0.5f, 0.5f, -0.5f,
+            0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
             // V6
-            -0.5f, 0.5f, -0.5f,
+            -0.5f, 0.5f, -0.5f, 0.0625f, 1.0f,
             // V7
-            -0.5f, -0.5f, -0.5f,
+            -0.5f, -0.5f, -0.5f, 0.0625f, 0.9375f,
     };
+
     // 定义每个面的顶点索引
     private static final int[][] FACE_INDICES = {
             // 前面
@@ -38,7 +43,7 @@ public class Block {
             // 右面
             {3, 4, 5, 5, 2, 3},
             // 上面
-            {1, 2, 5, 5, 6, 1},
+            {5, 6, 1, 1, 2, 5},
             // 下面
             {7, 4, 3, 3, 0, 7}
     };
@@ -118,4 +123,13 @@ public class Block {
 
         return drawface;
     }
+
+//    public static float[] GetFaceUv(BlockType blockType, int face) {
+//        switch (blockType) {
+//            case GRASS:
+//                if(face == 0)
+//                    return new float[]{0.0f, 0.0f, 1.0f, 1.0f};
+//        }
+//    }
+//    public static float[]
 }

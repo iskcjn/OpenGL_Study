@@ -76,19 +76,26 @@ public class Mesh {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
 
         // 设置顶点属性指针
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * Float.BYTES, 0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 5 * Float.BYTES, 0);
         glEnableVertexAttribArray(0);
-    }
 
+        // 纹理坐标属性
+        glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * Float.BYTES, 3 * Float.BYTES);
+        glEnableVertexAttribArray(1);
+
+        // 解绑VAO，安全起见
+        GL30.glBindVertexArray(0);
+    }
+    // 模型位置矩阵
+    Matrix4f modelLoction;
     public void Draw() {
         // 使用着色器程序
         glUseProgram(Game._shaderProgramId);
         // System.out.println(Game._shaderProgramId);
 
         // 绑定纹理
-        // glActiveTexture(GL_TEXTURE0);
-        // glBindTexture(GL_TEXTURE_2D, textureID);
-        // glUniform1i(glGetUniformLocation(shaderProgram._shaderProgramID, "texture"), 0);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, Game._textureId);
 
         // 绑定VAO
         glBindVertexArray(_vao);
@@ -104,11 +111,15 @@ public class Mesh {
         int viewLoc = glGetUniformLocation(Game._shaderProgramId, "worldMatrix");
 
         // 获取 uniform 变量的位置
-        int colorUniformLocation = GL20.glGetUniformLocation(Game._shaderProgramId, "inputColor");
+        // int colorUniformLocation = GL20.glGetUniformLocation(Game._shaderProgramId, "inputColor");
 
         // 将投影矩阵数据传递到着色器
         glUniformMatrix4fv(projLoc, false, projection.get(new float[16]));
         glUniformMatrix4fv(viewLoc, false, view.get(new float[16]));
+
+        // 传入UV坐标
+        //gluniform
+        glUniform1i(glGetUniformLocation(Game._shaderProgramId, "texture_sampler"), 0);
 
         int offset = 0;
         for (Map.Entry<Vector3i, int[]> entry : _chunkMap.entrySet()) {
@@ -116,26 +127,11 @@ public class Mesh {
             int[] blockIndices = entry.getValue();
 
             // 计算模型矩阵
-            Matrix4f modelLoction = new Matrix4f().translate(
+            modelLoction = new Matrix4f().translate(
                     (_chunkPos.x * Chunk.CHUNK_WIDTH) + key.x,
                     (_chunkPos.y * Chunk.CHUNK_HEIGHT) + key.y,
                     (_chunkPos.z * Chunk.CHUNK_DEPTH) + key.z
             );
-
-            //设置颜色值，例如红色 (1.0, 0.0, 0.0, 1.0)
-            float r = 0.0f;
-            float g = 0.5f;
-            float b = 0.0f;
-            float a = 1.0f;
-            GL20.glUniform4f(colorUniformLocation, r, g, b, a);
-//            if(key.x == 0){
-//                // 设置颜色值，例如红色 (1.0, 0.0, 0.0, 1.0)
-//                float r = 1.0f;
-//                float g = 0.0f;
-//                float b = 0.0f;
-//                float a = 1.0f;
-//                GL20.glUniform4f(colorUniformLocation, r, g, b, a);
-//            }
 
             // 将位置数据传递到着色器
             glUniformMatrix4fv(modelLoc, false, modelLoction.get(new float[16]));
@@ -143,6 +139,7 @@ public class Mesh {
             glDrawElements(GL_TRIANGLES, blockIndices.length, GL_UNSIGNED_INT, offset * Integer.BYTES);
             offset += blockIndices.length;
         }
+        GL30.glBindVertexArray(0); // 解绑
     }
 
     public void CleanUp() {
@@ -151,8 +148,11 @@ public class Mesh {
         glDeleteBuffers(_ebo);
         glDeleteVertexArrays(_vao);
 
-        MemoryUtil.memFree(FloatBuffer.wrap(vertices));
-        MemoryUtil.memFree(IntBuffer.wrap(indices));
-        _chunkMap.clear();
+//        if(vertices != null)
+//            MemoryUtil.memFree(FloatBuffer.wrap(vertices));
+//        if(indices!= null)
+//            MemoryUtil.memFree(IntBuffer.wrap(indices));
+        if(_chunkMap!= null)
+            _chunkMap.clear();
     }
 }

@@ -1,6 +1,7 @@
 package com.tiangong.blockhorizon;
 
 import com.tiangong.blockhorizon.utility.ShaderProgram;
+import com.tiangong.blockhorizon.utility.Utility;
 import com.tiangong.blockhorizon.world.World;
 import com.tiangong.blockhorizon.world.chunk.Chunk;
 import org.joml.Vector3f;
@@ -18,9 +19,14 @@ public class Game implements Runnable {
     public static Window _window;
     // 摄像机
     public static Camera _camera;
+    // 世界
     public static World _world;
+    // 着色器
     public static ShaderProgram _shaderProgram;
+    // 着色器程序ID
     public static int _shaderProgramId;
+    // 纹理ID
+    public static int _textureId;
 
     // 窗口大小
     public static final int Win_width = 1280;
@@ -50,6 +56,9 @@ public class Game implements Runnable {
         _shaderProgramId = _shaderProgram.createShaderProgram();
         // 实例化摄像机
         _camera = new Camera(Win_width, Win_height, new Vector3f(0.0f, 0.0f, 3.0f));
+        // 加载纹理
+        _textureId = Utility.loadTexture("D:\\CODE_PJ\\JAVA_Prpject_Libray\\NewWorld-N1\\src\\main\\resources\\Texture\\Block_atlas.png");
+
 
         // 实例化世界
         _world = new World();
@@ -96,6 +105,14 @@ public class Game implements Runnable {
      */
     private void release() {
         _shaderProgram.delete(_shaderProgramId);
+
+        for(Chunk chunk : _world._chunkList){
+            if(chunk != null){
+                if(chunk.mesh!= null){
+                    chunk.mesh.CleanUp();
+                }
+            }
+        }
 
         // 释放窗口回调
         glfwFreeCallbacks(Window._WINDOW_HANDLE);

@@ -16,8 +16,8 @@ public class World {
 
     public void addChunk() {
         for (int y = 0; y < 1; y++) {
-            for (int z = 0; z < 3; z++) {
-                for (int x = 0; x < 3; x++) {
+            for (int z = 0; z < 1; z++) {
+                for (int x = 0; x < 1; x++) {
                     Chunk chunk = new Chunk(new Vector3i(x, y, z));
                     chunk.addBlock();
                     chunk.mesh.updateIndices();
