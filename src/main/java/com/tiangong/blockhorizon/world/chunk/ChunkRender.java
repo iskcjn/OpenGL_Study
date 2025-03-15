@@ -112,7 +112,7 @@ public class ChunkRender {
 
         // 使用着色器程序
         // glUseProgram(Game._shaderProgramId);
-        Game._shaderProgram.use();
+        Game._shaderProgram.use(Game._shaderProgramId);
 
         // 绑定纹理
         glActiveTexture(GL_TEXTURE0);
@@ -138,12 +138,12 @@ public class ChunkRender {
         glUniform1i(glGetUniformLocation(Game._shaderProgramId, "textureSampler"), 0);
 
         // 设置Uniform变量
-        Game._shaderProgram.setUniform("uSpecColor", 0.3f, 0.3f, 0.3f); // 镜面反射颜色
-        Game._shaderProgram.setUniform("uShininess", 32.0f); // 高光指数
-        Game._shaderProgram.setUniform("uLightDir", 10.0f, -1.0f, -10.0f); // 光源方向
-        Game._shaderProgram.setUniform("uLightColor", 1.0f, 1.0f, 1.0f); // 光源颜色
+        Game._shaderProgram.setUniform("uSpecColor", 0.3f, 0.3f, 0.3f, Game._shaderProgramId); // 镜面反射颜色
+        Game._shaderProgram.setUniform("uShininess", 32.0f, Game._shaderProgramId); // 高光指数
+        Game._shaderProgram.setUniform("uLightDir", 10.0f, -100.0f, -10.0f, Game._shaderProgramId); // 光源方向
+        Game._shaderProgram.setUniform("uLightColor", 1.0f, 1.0f, 1.0f, Game._shaderProgramId); // 光源颜色
         Vector3f _cameraPos = Game._camera.getPosition();
-        Game._shaderProgram.setUniform("uCameraPos", _cameraPos.x, _cameraPos.y, _cameraPos.z); // 摄像机位置
+        Game._shaderProgram.setUniform("uCameraPos", _cameraPos.x, _cameraPos.y, _cameraPos.z, Game._shaderProgramId); // 摄像机位置
 
         // 添加实际绘制调用
         glDrawArrays(GL_TRIANGLES, 0, vertices.length / 8); // 每个顶点包含3位置+2纹理坐标

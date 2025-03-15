@@ -21,8 +21,8 @@ public class World {
 
     public void generate() throws IOException {
         for (int y = 0; y < 16; y++) {
-            for (int z = -2; z < 2; z++) {
-                for (int x = -2; x < 2; x++) {
+            for (int z = -16; z < 16; z++) {
+                for (int x = -16; x < 16; x++) {
                     addChunk(x, y, z);
                 }
             }

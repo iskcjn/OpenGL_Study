@@ -3,7 +3,8 @@ package com.tiangong.blockhorizon.world.chunk.block;
 public enum BlockType {
     AIR,
     GRASS,
-    DIRT
+    DIRT,
+    STONE
 }
 /*
 MIT License

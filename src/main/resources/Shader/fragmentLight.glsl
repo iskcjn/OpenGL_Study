@@ -44,7 +44,7 @@ void main()
     vec3 uColor = texture(textureSampler, TexCoord).rgb;
 
     // 环境光
-    vec3 ambient = vec3(0.3) * uColor;
+    vec3 ambient = vec3(0.1) * uColor;
 
     // 漫反射
     float NdotL = max(0.0, dot(worldNormal, lightDir));

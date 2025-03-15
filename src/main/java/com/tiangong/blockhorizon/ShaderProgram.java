@@ -1,6 +1,7 @@
 package com.tiangong.blockhorizon;
 
 import com.tiangong.blockhorizon.utility.Utility;
+import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
@@ -74,28 +75,38 @@ public class ShaderProgram {
         return programID;
     }
 
-    public void use() {
-        GL20.glUseProgram(Game._shaderProgramId);
+    public void use(int programId) {
+        GL20.glUseProgram(programId);
     }
 
-    public void setUniform(String name, float value) {
-        GL20.glUniform1f(GL20.glGetUniformLocation(Game._shaderProgramId, name), value);
+    public void setUniform(String name, float value, int programId) {
+        GL20.glUniform1f(GL20.glGetUniformLocation(programId, name), value);
     }
 
-    public void setUniform(String name, int value) {
-        GL20.glUniform1i(GL20.glGetUniformLocation(Game._shaderProgramId, name), value);
+    public void setUniform(String name, int value, int programId) {
+        GL20.glUniform1i(GL20.glGetUniformLocation(programId, name), value);
     }
 
-    public void setUniform(String name, float x, float y, float z) {
-        GL20.glUniform3f(GL20.glGetUniformLocation(Game._shaderProgramId, name), x, y, z);
+    public void setUniform(String name, float x, float y, float z, int programId) {
+        GL20.glUniform3f(GL20.glGetUniformLocation(programId, name), x, y, z);
     }
 
-    public void setUniformMatrix4fv(String name, float[] matrix) {
+    public void setUniformMatrix4fv(String name, float[] matrix, int programId) {
         // 获取Uniform变量的位置
-        int location = GL20.glGetUniformLocation(Game._shaderProgramId, name);
+        int location = GL20.glGetUniformLocation(programId, name);
         // 创建一个FloatBuffer并填充矩阵数据
         FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
         buffer.put(matrix);
+        buffer.flip(); // 翻转缓冲区以准备读取
+        // 设置Uniform矩阵
+        GL20.glUniformMatrix4fv(location, false, buffer);
+    }
+    public void setUniformMatrix4fv(String name, Matrix4f matrix, int programId) {
+        // 获取Uniform变量的位置
+        int location = GL20.glGetUniformLocation(programId, name);
+        // 创建一个FloatBuffer并填充矩阵数据
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+        buffer.put(matrix.get(new float[16]));
         buffer.flip(); // 翻转缓冲区以准备读取
         // 设置Uniform矩阵
         GL20.glUniformMatrix4fv(location, false, buffer);

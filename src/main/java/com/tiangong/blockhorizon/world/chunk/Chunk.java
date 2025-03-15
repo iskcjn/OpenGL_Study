@@ -49,7 +49,8 @@ public class Chunk {
         this.vertices = new float[0];
 
         // 越小起伏越小
-        double scale = 0.034;
+        // double scale = 0.034;
+        double scale = 0.03;
 
         int offset = 64;
 
@@ -90,6 +91,11 @@ public class Chunk {
                         block.isSolid = Utility.isSolid(block.type);
                         setBlock(x, y, z, block);
                     }
+                    else if(blockY >= 1 && blockY <= value - 5){
+                        Block block = new Block(blockX, blockY, blockZ, BlockType.STONE);
+                        block.isSolid = Utility.isSolid(block.type);
+                        setBlock(x, y, z, block);
+                    }
                     else{
                         Block block = new Block(blockX, blockY, blockZ, BlockType.DIRT);
                         block.isSolid = Utility.isSolid(block.type);
@@ -104,7 +110,6 @@ public class Chunk {
         // render.initBuffer();
     }
 
-    //TODO 优化面剔除
 
     /**
      * 生成顶点数据以及 UV 数组

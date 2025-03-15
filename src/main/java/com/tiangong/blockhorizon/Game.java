@@ -3,6 +3,7 @@ package com.tiangong.blockhorizon;
 import com.tiangong.blockhorizon.utility.Utility;
 import com.tiangong.blockhorizon.utility.noise.PerlinNoise;
 import com.tiangong.blockhorizon.window.Window;
+import com.tiangong.blockhorizon.world.SkyBox;
 import com.tiangong.blockhorizon.world.World;
 import com.tiangong.blockhorizon.world.chunk.Chunk;
 import org.joml.Matrix4f;
@@ -26,13 +27,18 @@ public class Game implements Runnable {
     public static Window window;
     public static Camera _camera;
     public static ShaderProgram _shaderProgram;
+    public static ShaderProgram _shaderProgramSkyBox;
     public static int _shaderProgramId;
+    public static int _skyBox_shaderProgramId;
     public static int _textureId;
+    public static int _skyBox_textureId;
 
     // 种子
     public static int seed = 123456;
     // 噪声
     // public static PerlinNoise perlin;
+    // 天空盒
+    public static SkyBox skyBox;
     // 世界
     public static World _world;
     // 世界重生点
@@ -59,7 +65,8 @@ public class Game implements Runnable {
         window = new Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
         window.init();
 
-        _textureId = Utility.loadTexture("D:\\CODE_PJ\\JAVA_Project_Libray\\Block Horizon-N2\\src\\main\\resources\\Textures\\block_atlas.png");
+        _textureId = Utility.loadTexture("D:\\CODE_PJ\\JAVA_Project_Libray\\Block Horizon-N2\\src\\main\\resources\\Textures\\block_atlas2.png");
+        // _skyBox_textureId = Utility.loadTexture("D:\\CODE_PJ\\JAVA_Project_Libray\\Block Horizon-N2\\src\\main\\resources\\Textures\\skybox.png");
 
         // 初始化摄像机
         _camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT, new Vector3f(0.0f, 0.0f, -6.0f));
@@ -67,11 +74,21 @@ public class Game implements Runnable {
         _shaderProgram = new ShaderProgram(Window.WINDOW_HANDLE);
         _shaderProgramId = _shaderProgram.createShaderProgram("Shader/vertexLight.glsl", "Shader/fragmentLight.glsl");
         // _shaderProgramId = _shaderProgram.createShaderProgram("Shader/vertex.glsl", "Shader/fragment.glsl");
+        // 创建天空盒着色器程序
+        _shaderProgramSkyBox = new ShaderProgram(Window.WINDOW_HANDLE);
+        _skyBox_shaderProgramId = _shaderProgramSkyBox.createShaderProgram("Shader/skybox_vertex.glsl", "Shader/skybox_fragment.glsl");
+
 
         // 初始化世界重生点
         Random random = new Random();
         respawnPoint = new Vector3f(random.nextInt(Chunk.CHUNK_WIDTH), 0.0f, random.nextInt(Chunk.CHUNK_DEPTH));
 
+        // 初始化天空盒
+        skyBox = new SkyBox();
+        skyBox.loadTexture();
+        // 在init()方法中修改天空盒纹理加载方式
+        _skyBox_textureId = skyBox.textureID.get(0); // 使用SkyBox类自己加载的立方体贴图ID
+        skyBox.bindTexture();
 
 
         // 初始化世界
@@ -85,7 +102,7 @@ public class Game implements Runnable {
         GL11.glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 
         // 帧率控制参数
-        final double TARGET_FPS = 60.0;
+        final double TARGET_FPS = 1000.0;
         final double TARGET_FRAME_TIME = 1.0 / TARGET_FPS;
 
         double lastTime = 0.0f;
@@ -96,6 +113,8 @@ public class Game implements Runnable {
 //            _world.addChunk(-1, i, -2);
 //            _world.upChunkData();
 //        }
+        // 启用深度测试
+        glEnable(GL_DEPTH_TEST);
 
         while(!glfwWindowShouldClose(Window.WINDOW_HANDLE)){
 
@@ -123,6 +142,8 @@ public class Game implements Runnable {
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
             // System.out.println("玩家位置: X " + _camera.getPosition().x + ", Y " + _camera.getPosition().y + ", Z " + _camera.getPosition().z);
+            // 渲染区块前启用深度测试
+            // glEnable(GL_DEPTH_TEST);
 
             // 渲染
             for (Chunk chunk : _world.chunks) {
@@ -131,6 +152,9 @@ public class Game implements Runnable {
                     chunk.render.draw();
                 }
             }
+            //glDepthFunc(GL_LEQUAL);
+            skyBox.draw();
+            //glDepthFunc(GL_LESS);
 
             // 交换颜色缓冲区
             glfwSwapBuffers(Window.WINDOW_HANDLE);
@@ -140,7 +164,7 @@ public class Game implements Runnable {
             // FPS计数器（可选）
             frameCount++;
             if (currentTime - lastFPSCheck >= 1.0) {
-                // System.out.println("FPS: " + frameCount);
+                System.out.println("FPS: " + frameCount);
                 frameCount = 0;
                 lastFPSCheck = currentTime;
             }
@@ -158,6 +182,8 @@ public class Game implements Runnable {
         for (Chunk chunk : _world.chunks) {
             chunk.render.cleanup();
         }
+
+        _shaderProgramSkyBox.delete(_skyBox_shaderProgramId);
 
         // 释放窗口回调
         glfwFreeCallbacks(Window.WINDOW_HANDLE);

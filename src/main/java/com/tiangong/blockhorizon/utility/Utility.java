@@ -194,6 +194,37 @@ public class Utility {
                     return new Vector2f[]{uv, new Vector2f(uv.x + onePixelUV, uv.y), new Vector2f(uv.x + onePixelUV, uv.y + onePixelUV),
                             new Vector2f(uv.x + onePixelUV, uv.y + onePixelUV), new Vector2f(uv.x, uv.y + onePixelUV), uv};
                 }
+            case STONE:
+                if(blockFace == BlockFace.TOP){
+                    Vector2f uv = GetUVByLoc(3, 0, AtlasWIDTH, AtlasHEIGHT, PixeWIDTH, PixeHEIGHT);
+                    return new Vector2f[]{uv, new Vector2f(uv.x + onePixelUV, uv.y), new Vector2f(uv.x + onePixelUV, uv.y + onePixelUV),
+                            new Vector2f(uv.x + onePixelUV, uv.y + onePixelUV), new Vector2f(uv.x, uv.y + onePixelUV), uv};
+                }
+                if(blockFace == BlockFace.BOTTOM){
+                    Vector2f uv = GetUVByLoc(3, 0, AtlasWIDTH, AtlasHEIGHT, PixeWIDTH, PixeHEIGHT);
+                    return new Vector2f[]{uv, new Vector2f(uv.x + onePixelUV, uv.y), new Vector2f(uv.x + onePixelUV, uv.y + onePixelUV),
+                            new Vector2f(uv.x + onePixelUV, uv.y + onePixelUV), new Vector2f(uv.x, uv.y + onePixelUV), uv};
+                }
+                if(blockFace == BlockFace.FRONT){
+                    Vector2f uv = GetUVByLoc(3, 0, AtlasWIDTH, AtlasHEIGHT, PixeWIDTH, PixeHEIGHT);
+                    return new Vector2f[]{uv, new Vector2f(uv.x + onePixelUV, uv.y), new Vector2f(uv.x + onePixelUV, uv.y + onePixelUV),
+                            new Vector2f(uv.x + onePixelUV, uv.y + onePixelUV), new Vector2f(uv.x, uv.y + onePixelUV), uv};
+                }
+                if(blockFace == BlockFace.BACK){
+                    Vector2f uv = GetUVByLoc(3, 0, AtlasWIDTH, AtlasHEIGHT, PixeWIDTH, PixeHEIGHT);
+                    return new Vector2f[]{uv, new Vector2f(uv.x + onePixelUV, uv.y), new Vector2f(uv.x + onePixelUV, uv.y + onePixelUV),
+                            new Vector2f(uv.x + onePixelUV, uv.y + onePixelUV), new Vector2f(uv.x, uv.y + onePixelUV), uv};
+                }
+                if(blockFace == BlockFace.LEFT){
+                    Vector2f uv = GetUVByLoc(3, 0, AtlasWIDTH, AtlasHEIGHT, PixeWIDTH, PixeHEIGHT);
+                    return new Vector2f[]{uv, new Vector2f(uv.x + onePixelUV, uv.y), new Vector2f(uv.x + onePixelUV, uv.y + onePixelUV),
+                            new Vector2f(uv.x + onePixelUV, uv.y + onePixelUV), new Vector2f(uv.x, uv.y + onePixelUV), uv};
+                }
+                if(blockFace == BlockFace.RIGHT){
+                    Vector2f uv = GetUVByLoc(3, 0, AtlasWIDTH, AtlasHEIGHT, PixeWIDTH, PixeHEIGHT);
+                    return new Vector2f[]{uv, new Vector2f(uv.x + onePixelUV, uv.y), new Vector2f(uv.x + onePixelUV, uv.y + onePixelUV),
+                            new Vector2f(uv.x + onePixelUV, uv.y + onePixelUV), new Vector2f(uv.x, uv.y + onePixelUV), uv};
+                }
             default:
                 Vector2f uv = GetUVByLoc(2, 0, AtlasWIDTH, AtlasHEIGHT, PixeWIDTH, PixeHEIGHT);
                 return new Vector2f[]{uv, new Vector2f(uv.x + onePixelUV, uv.y), new Vector2f(uv.x + onePixelUV, uv.y + onePixelUV),

@@ -75,7 +75,7 @@ public class Camera {
                 .perspective((float) Math.toRadians(fov),
                         (float) windowWidth / windowHeight,
                         0.1f,
-                        100.0f);
+                        1000.0f);
     }
 
     public Matrix4f getViewMatrix() {
@@ -134,12 +134,12 @@ public class Camera {
     }
 
     public void processMouseScroll(float yoffset) {
-        fov -= yoffset;
-        if (fov < 1.0f)
-            fov = 1.0f;
-        if (fov > 90.0f)
-            fov = 90.0f;
-        updateProjectionMatrix();
+//        fov -= yoffset;
+//        if (fov < 1.0f)
+//            fov = 1.0f;
+//        if (fov > 90.0f)
+//            fov = 90.0f;
+//        updateProjectionMatrix();
     }
 
     // Getter方法

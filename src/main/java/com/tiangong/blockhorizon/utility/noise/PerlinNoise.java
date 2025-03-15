@@ -60,7 +60,7 @@ public class PerlinNoise {
     public static double calculateHeight(double x, double z, double scale) {
         // Sample noise and scale it to control height variation
         double noiseValue = noise(x * scale, z * scale);
-        return (noiseValue + 1) * 40;
+        return (noiseValue + 1) * 20;
         // return (noiseValue + 1) * 20; // Scale to 0-40
     }
 }
